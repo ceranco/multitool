@@ -20,4 +20,106 @@ class BasalSegment {
     @required this.end,
     @required this.basalRate,
   }) : assert(start < end);
+
+  /// Calculates the relationship of this segment with another one.
+  ///
+  /// See [BasalSegmentRelationship] docs for more information.
+  BasalSegmentRelationship calculateRelationship(BasalSegment other) {
+    // Check if the segments match to ease further checks
+    if (start == other.start && end == other.end) {
+      return BasalSegmentRelationship.match;
+    }
+
+    // Can be one of the following: `before`, `beforeOverlap`, `contains`
+    if (start <= other.start) {
+      if (end >= other.end) {
+        return BasalSegmentRelationship.contains;
+      } else if (end <= other.start) {
+        return BasalSegmentRelationship.before;
+      } else {
+        return BasalSegmentRelationship.beforeOverlap;
+      }
+    }
+    // Can be one of the following: `after`, `afterOverlap`, `contained`
+    else {
+      if (end <= other.end) {
+        return BasalSegmentRelationship.contained;
+      } else if (start >= other.end) {
+        return BasalSegmentRelationship.after;
+      } else
+        return BasalSegmentRelationship.afterOverlap;
+    }
+  }
+}
+
+/// The possible relationships between different [BasalSegment]s.
+enum BasalSegmentRelationship {
+  /// The segment starts and ends before the other one starts.
+  ///
+  /// ```
+  ///  segment 1
+  /// |---------|
+  ///               |----------|
+  ///                 segment 2
+  /// ```
+  before,
+
+  /// The segment starts and ends after the other one starts.
+  ///
+  /// ```
+  ///                 segment 1
+  ///               |----------|
+  /// |---------|
+  ///  segment 2
+  /// ```
+  after,
+
+  /// The segment starts before the other one begins, and ends
+  /// between the start and end of the other segment.
+  /// ```
+  ///  segment 1
+  /// |---------|
+  ///        |----------|
+  ///          segment 2
+  /// ```
+  beforeOverlap,
+
+  /// The segment starts between the start and end of the other one,
+  /// and ends after the end of the other segment.
+  /// ```
+  ///          segment 1
+  ///        |----------|
+  /// |---------|
+  ///  segment 2
+  /// ```
+  afterOverlap,
+
+  /// The segment starts before the start of the other one,
+  /// and ends after the end of the other segment.
+  /// ```
+  ///      segment 1
+  /// |-----------------|
+  ///     |---------|
+  ///      segment 2
+  /// ```
+  contains,
+
+  /// The segment starts and ends between the start and end of the other one.
+  /// ```
+  ///      segment 1
+  ///     |---------|
+  /// |-----------------|
+  ///      segment 2
+  /// ```
+  contained,
+
+  /// The segment starts and ends exactly where the other
+  /// segment starts and ends.
+  /// ```
+  ///  segment 1
+  /// |---------|
+  /// |---------|
+  ///  segment 2
+  /// ```
+  match,
 }
