@@ -39,7 +39,104 @@ class BasalPlan {
   ///   segment is split and both parts are shrunk.
   /// * If new segment completely contains another, the other
   ///   segment is discarded.
-  void add(BasalSegment segment) {}
+  void add(BasalSegment segment) {
+    // Find all segments which 'touch' the new segment
+    final Map<int, BasalSegmentRelationship> relationships = _segments
+        .asMap()
+        .map((index, s) => MapEntry(
+              index,
+              segment.calculateRelationship(s),
+            ))
+          ..removeWhere((_, relationship) =>
+              relationship == BasalSegmentRelationship.after ||
+              relationship == BasalSegmentRelationship.before);
+
+    // Go over each segment which interacts with the new segment and
+    // edit it accordingly
+    bool added = false; // make sure we add the segment **once**
+
+    // This must be bumped when adding / removing new segments to the map,
+    // to ensure that ensuing relationships can be handled correctly.
+    // This works because we iterate over the relationships from beginning to end.
+    int indexOffset = 0;
+    for (var entry in relationships.entries) {
+      final index = entry.key + indexOffset;
+      final relationship = entry.value;
+
+      if (relationship == BasalSegmentRelationship.afterOverlap) {
+        // shrink the segment
+        final overlappedSegment = _segments[index];
+        _segments[index] = overlappedSegment.copyWith(end: segment.start);
+
+        // add the new segment
+        if (!added) {
+          added = true;
+          _segments.insert(index + 1, segment);
+          indexOffset++;
+        }
+      } else if (relationship == BasalSegmentRelationship.beforeOverlap) {
+        // shrink the segment
+        final overlappedSegment = _segments[index];
+        _segments[index] = overlappedSegment.copyWith(start: segment.end);
+
+        // add the new segment
+        if (!added) {
+          added = true;
+          _segments.insert(index, segment);
+          indexOffset++;
+        }
+      } else if (relationship == BasalSegmentRelationship.contains) {
+        // remove the segment
+        _segments.removeAt(index);
+
+        // add the new segment
+        if (!added) {
+          added = true;
+          _segments.insert(index, segment);
+        } else {
+          // If we removed the segment without adding another (because
+          // it was already added), we must decrement the offset.
+          indexOffset--;
+        }
+      } else if (relationship == BasalSegmentRelationship.contained) {
+        // This case should only occur when there is a single relationship,
+        // as the existing segment contains the new segment.
+        // As such, there is no need to set the `added` flag or bump the `indexOffset`.
+
+        // split the segment
+        final containingSegment = _segments[index];
+        int addIndex = index;
+
+        // First we remove the existing segment so that we can use simple
+        // `.insert`s.
+        _segments.removeAt(index);
+
+        // The first part of the split is only needed if the new
+        // segment doesn't start at the same point as the existing segment.
+        if (segment.start != containingSegment.start) {
+          _segments.insert(
+            addIndex++,
+            containingSegment.copyWith(
+              end: segment.start,
+            ),
+          ); // the first part of the split
+        }
+
+        _segments.insert(addIndex++, segment); // the new segment
+
+        // The second part of the split is only needed if the new
+        // segment doesn't end at the same point as the existing segment.
+        if (segment.end != containingSegment.end) {
+          _segments.insert(
+            addIndex,
+            containingSegment.copyWith(start: segment.end),
+          ); // the second part of the split
+        }
+      } else if (relationship == BasalSegmentRelationship.match) {
+        _segments[index] = segment;
+      }
+    }
+  }
 
   /// Removes the segment at the given index.
   ///
