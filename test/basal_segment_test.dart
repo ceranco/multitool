@@ -112,5 +112,125 @@ void main() {
       final relationship = segment1.calculateRelationship(segment2);
       expect(relationship, BasalSegmentRelationship.match);
     });
+    test(
+      'Calculates `BasalSegmentRelationship.contained` for segments with same `start` ',
+      () {
+        final segment1 = BasalSegment(
+          start: BasalTime.earliest,
+          end: BasalTime(hour: 10, minute: 30),
+          basalRate: 1,
+        );
+        final segment2 = BasalSegment(
+          start: BasalTime.earliest,
+          end: BasalTime.latest,
+          basalRate: 1,
+        );
+
+        final relationship = segment1.calculateRelationship(segment2);
+        expect(relationship, BasalSegmentRelationship.contained);
+      },
+    );
+    test(
+      'Calculates `BasalSegmentRelationship.contained` for segments with same `end` ',
+      () {
+        final segment1 = BasalSegment(
+          start: BasalTime(hour: 10, minute: 30),
+          end: BasalTime.latest,
+          basalRate: 1,
+        );
+        final segment2 = BasalSegment(
+          start: BasalTime.earliest,
+          end: BasalTime.latest,
+          basalRate: 1,
+        );
+
+        final relationship = segment1.calculateRelationship(segment2);
+        expect(relationship, BasalSegmentRelationship.contained);
+      },
+    );
+    test(
+      'Calculates `BasalSegmentRelationship.before` for touching segments',
+      () {
+        final segment1 = BasalSegment(
+          start: BasalTime(hour: 5, minute: 30),
+          end: BasalTime(hour: 10, minute: 15),
+          basalRate: 1,
+        );
+        final segment2 = BasalSegment(
+          start: segment1.end,
+          end: BasalTime(hour: 21, minute: 15),
+          basalRate: 1,
+        );
+
+        final relationship = segment1.calculateRelationship(segment2);
+        expect(relationship, BasalSegmentRelationship.before);
+      },
+    );
+    test(
+      'Calculates `BasalSegmentRelationship.after` for touching segments',
+      () {
+        final segment1 = BasalSegment(
+          start: BasalTime(hour: 5, minute: 30),
+          end: BasalTime(hour: 10, minute: 15),
+          basalRate: 1,
+        );
+        final segment2 = BasalSegment(
+          start: BasalTime.earliest,
+          end: segment1.start,
+          basalRate: 1,
+        );
+
+        final relationship = segment1.calculateRelationship(segment2);
+        expect(relationship, BasalSegmentRelationship.after);
+      },
+    );
+    test('CopyWith works correctly', () {
+      final segment = BasalSegment(
+        start: BasalTime(hour: 10, minute: 30),
+        end: BasalTime(hour: 20, minute: 1),
+        basalRate: 5,
+      );
+
+      final newStart = BasalTime(hour: 5, minute: 5);
+      final newEnd = BasalTime.latest;
+      final newBasalRate = 42.42;
+
+      expect(
+          segment.copyWith(start: newStart),
+          equals(BasalSegment(
+            start: newStart,
+            end: segment.end,
+            basalRate: segment.basalRate,
+          )),
+          reason: 'Changed `start`');
+      expect(
+          segment.copyWith(end: newEnd),
+          equals(BasalSegment(
+            start: segment.start,
+            end: newEnd,
+            basalRate: segment.basalRate,
+          )),
+          reason: 'Changed `end`');
+      expect(
+          segment.copyWith(basalRate: newBasalRate),
+          equals(BasalSegment(
+            start: segment.start,
+            end: segment.end,
+            basalRate: newBasalRate,
+          )),
+          reason: 'Changed `basalRate`');
+      expect(
+          segment.copyWith(
+            start: newStart,
+            end: newEnd,
+            basalRate: newBasalRate,
+          ),
+          equals(BasalSegment(
+            start: newStart,
+            end: newEnd,
+            basalRate: newBasalRate,
+          )),
+          reason: 'Changed everything');
+    });
   });
 }

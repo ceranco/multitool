@@ -21,6 +21,22 @@ class BasalSegment {
     @required this.basalRate,
   }) : assert(start < end);
 
+  @override
+  operator ==(Object other) =>
+      other is BasalSegment &&
+      start == other.start &&
+      end == other.end &&
+      basalRate == other.basalRate;
+
+  @override
+  int get hashCode {
+    int hash = 23;
+    hash = hash * 31 + start.hashCode;
+    hash = hash * 31 + end.hashCode;
+    hash = hash * 31 + basalRate.hashCode;
+    return hash;
+  }
+
   /// Calculates the relationship of this segment with another one.
   ///
   /// See [BasalSegmentRelationship] docs for more information.
@@ -30,9 +46,11 @@ class BasalSegment {
       return BasalSegmentRelationship.match;
     }
 
-    // Can be one of the following: `before`, `beforeOverlap`, `contains`
+    // Can be one of the following: `before`, `beforeOverlap`, `contains`, `contained`
     if (start <= other.start) {
-      if (end >= other.end) {
+      if (start == other.start && end <= other.end) {
+        return BasalSegmentRelationship.contained;
+      } else if (end >= other.end) {
         return BasalSegmentRelationship.contains;
       } else if (end <= other.start) {
         return BasalSegmentRelationship.before;
@@ -50,6 +68,14 @@ class BasalSegment {
         return BasalSegmentRelationship.afterOverlap;
     }
   }
+
+  /// Creates a new instance with the same values as this one, expect the specified changes.
+  BasalSegment copyWith({BasalTime start, BasalTime end, double basalRate}) =>
+      BasalSegment(
+        start: start ?? this.start,
+        end: end ?? this.end,
+        basalRate: basalRate ?? this.basalRate,
+      );
 }
 
 /// The possible relationships between different [BasalSegment]s.
