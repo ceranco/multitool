@@ -15,7 +15,7 @@ class BasalSegment {
   /// The basal rate during the segment.
   final double basalRate;
 
-  const BasalSegment({
+  BasalSegment({
     @required this.start,
     @required this.end,
     @required this.basalRate,
