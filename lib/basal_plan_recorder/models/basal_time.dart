@@ -33,6 +33,10 @@ class BasalTime {
   bool operator >(BasalTime other) =>
       hour > other.hour || hour == other.hour && minute > other.minute;
 
+  bool operator >=(BasalTime other) => this == other || this > other;
+
+  bool operator <=(BasalTime other) => this == other || this < other;
+
   bool operator <(BasalTime other) =>
       hour < other.hour || hour == other.hour && minute < other.minute;
 

@@ -86,5 +86,43 @@ void main() {
         expect(time1 < time2, true, reason: 'time1 minute is earlier');
       }
     });
+    test('Greater / lesser than or equal to operators should work', () {
+      // Same time
+      {
+        final hour = 12;
+        final minute = 54;
+
+        final time1 = BasalTime(hour: hour, minute: minute);
+        final time2 = BasalTime(hour: hour, minute: minute);
+
+        expect(time1 >= time2, true, reason: 'times are identical');
+        expect(time1 <= time2, true, reason: 'times are identical');
+      }
+
+      // Different hour
+      {
+        final hour1 = 5;
+        final hour2 = 6;
+        final minute = 10;
+
+        final time1 = BasalTime(hour: hour1, minute: minute);
+        final time2 = BasalTime(hour: hour2, minute: minute);
+
+        expect(time1 >= time2, false, reason: 'time1 hour is earlier');
+        expect(time1 <= time2, true, reason: 'time1 hour is earlier');
+      }
+      // Different minute
+      {
+        final hour = 10;
+        final minute1 = 10;
+        final minute2 = 30;
+
+        final time1 = BasalTime(hour: hour, minute: minute1);
+        final time2 = BasalTime(hour: hour, minute: minute2);
+
+        expect(time1 >= time2, false, reason: 'time1 minute is earlier');
+        expect(time1 <= time2, true, reason: 'time1 minute is earlier');
+      }
+    });
   });
 }
