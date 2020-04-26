@@ -37,7 +37,7 @@ class _EditSegmentBottomSheetState extends State<EditSegmentBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final int divisions = 1 ~/ 0.5 * 24;
+    final int divisions = 48;
     final int max = 60 * 24;
 
     return Column(
@@ -90,13 +90,16 @@ class _EditSegmentBottomSheetState extends State<EditSegmentBottomSheet> {
                   icon: Icon(
                     Icons.done,
                   ),
-                  onPressed: () => widget.onFinish(
-                    BasalSegment(
-                      start: startTime,
-                      end: endTime,
-                      basalRate: value,
-                    ),
-                  ),
+                  onPressed: () {
+                    widget.onFinish(
+                      BasalSegment(
+                        start: startTime,
+                        end: endTime,
+                        basalRate: value,
+                      ),
+                    );
+                    Navigator.pop(context);
+                  },
                 ),
               ),
             ),
@@ -105,26 +108,4 @@ class _EditSegmentBottomSheetState extends State<EditSegmentBottomSheet> {
       ],
     );
   }
-}
-
-extension BasalTimeExtensions on BasalTime {
-  /// Creates a new instance of [BasalTime] from an
-  /// [int] in the range [0..48].
-  ///
-  /// This enables "encoding" time in a simple value that can
-  /// be used in a slider easily.
-  static BasalTime fromIntRange(int value) {
-    assert(0 <= value && value <= 48);
-
-    final int hour = value ~/ 2;
-    final int minute = value % 2 == 0 ? 0 : 30;
-    return BasalTime(hour: hour, minute: minute);
-  }
-
-  /// Encodes the instance of [BasalTime] to an
-  /// [int] in the range [0..48].
-  ///
-  /// This enables "encoding" time in a simple value that can
-  /// be used in a slider easily.
-  int toIntRange() => hour * 2 + (minute == 0 ? 0 : 1);
 }
