@@ -124,5 +124,21 @@ void main() {
         expect(time1 <= time2, true, reason: 'time1 minute is earlier');
       }
     });
+    test('Encoding works', () {
+      final hour = 15;
+      final minute = 13;
+
+      final time = BasalTime(hour: hour, minute: minute);
+
+      expect(time.asEncoded, 913);
+    });
+    test('Decoding works', () {
+      final hour = 15;
+      final minute = 13;
+      final expected = BasalTime(hour: hour, minute: minute);
+
+      final time = BasalTime.decode(913);
+      expect(time, expected);
+    });
   });
 }

@@ -21,6 +21,10 @@ class BasalTime {
       : assert(0 <= hour && hour <= 24),
         assert(0 <= minute && minute < 60);
 
+  BasalTime.decode(int encodedInt)
+      : hour = encodedInt ~/ 60,
+        minute = encodedInt % 60;
+
   /// Returns a human-readable representation of the [BasalTime] in the `HH:MM` format.
   ///
   /// ```dart
@@ -51,4 +55,10 @@ class BasalTime {
     hash = hash * 31 + minute.hashCode;
     return hash;
   }
+
+  /// Returns the time encoded into an [int].
+  ///
+  /// This is useful for cases in which you want to
+  /// use the time as a regular value, for example in conjunction with a [Slider].
+  int get asEncoded => hour * 60 + minute;
 }
