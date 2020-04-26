@@ -189,5 +189,27 @@ class BasalPlan {
   /// * If `index == segments.length - 1`, [segment.end] must equal [BasalTime.latest],
   ///   otherwise throws [InvalidOperationException].
   /// * Calls [removeAt(index)] and then [add(segment)].
-  void replaceAt(int index, BasalSegment segment) {}
+  void replaceAt(int index, BasalSegment segment) {
+    // index must be in range
+    assert(0 <= index && index < segments.length);
+
+    // Ensure that if the first segment is replaced,
+    // it begins at `BasalTime.earliest`.
+    if (index == 0 && segment.start != BasalTime.earliest) {
+      throw new InvalidOperationException(
+        'The first segment must start at `BasalTime.earliest`',
+      );
+    }
+
+    // Ensure that if the last segment is replaced,
+    // it ends at `BasalTime.latest`.
+    if (index == _segments.length - 1 && segment.end != BasalTime.latest) {
+      throw new InvalidOperationException(
+        'The first segment must end at `BasalTime.latest`',
+      );
+    }
+
+    removeAt(index);
+    add(segment);
+  }
 }

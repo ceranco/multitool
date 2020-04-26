@@ -293,7 +293,7 @@ void main() {
           basalRate: 42,
         );
         final replacingSegment = BasalSegment(
-          start: lastSegment.end,
+          start: lastSegment.start,
           end: BasalTime(hour: 23, minute: 30),
           basalRate: 0.15,
         );
