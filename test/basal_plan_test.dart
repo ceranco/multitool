@@ -177,7 +177,7 @@ void main() {
         BasalSegment(
           start: segment1.start,
           end: BasalTime.latest,
-          basalRate: segment1.basalRate,
+          basalRate: segment3.basalRate,
         ),
       ];
 

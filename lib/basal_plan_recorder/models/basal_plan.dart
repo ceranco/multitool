@@ -146,7 +146,40 @@ class BasalPlan {
   /// * If removed segment is last, the previous segment
   ///   will be expanded to fill the gap.
   /// * If no other segments will remain, throws an [InvalidOperationException]
-  void removeAt(int index) {}
+  void removeAt(int index) {
+    // index must be in range
+    assert(0 <= index && index < segments.length);
+
+    // Ensure that there will be at least one remaining segment.
+    if (_segments.length == 1) {
+      throw new InvalidOperationException(
+        'At least one segment must remain for a BasalPlan to be valid',
+      );
+    }
+
+    // Save the segment to use when expanding the other ones.
+    final removedSegment = _segments[index];
+
+    // We need to expand the previous segment only if the last
+    // segment is removed.
+    if (index == _segments.length - 1) {
+      final segmentToExpand = _segments[index - 1];
+      _segments[index - 1] = segmentToExpand.copyWith(
+        end: removedSegment.end,
+      );
+    }
+    // Otherwise, we expand the following segment.
+    else {
+      final segmentToExpand = _segments[index + 1];
+      _segments[index + 1] = segmentToExpand.copyWith(
+        start: removedSegment.start,
+      );
+    }
+
+    // Remove the segment after the changes to ensure that
+    // the index remains correct.
+    _segments.removeAt(index);
+  }
 
   /// Replaces the segment at the given index.
   ///
