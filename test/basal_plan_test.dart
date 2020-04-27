@@ -393,5 +393,18 @@ void main() {
         reason: 'Replaced last segment (middle segments should expand)',
       );
     });
+    test('Replacing with single segment in plan works', () {
+      final plan = BasalPlan();
+      final segment = BasalSegment(
+        start: BasalTime.earliest,
+        end: BasalTime.latest,
+        basalRate: 2.0,
+      );
+
+      final expected = [segment];
+
+      plan.replaceAt(0, segment);
+      expect(listEquals(plan.segments, expected), true);
+    });
   });
 }

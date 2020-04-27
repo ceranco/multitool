@@ -199,7 +199,8 @@ class BasalPlan {
   ///   otherwise throws [InvalidOperationException].
   /// * If `index == segments.length - 1`, [segment.end] must equal [BasalTime.latest],
   ///   otherwise throws [InvalidOperationException].
-  /// * Calls [removeAt(index)] and then [add(segment)].
+  /// * If `segments.length == 1`, simply replaces the segment.
+  /// * Otherwise, calls [removeAt(index)] and then [add(segment)].
   void replaceAt(int index, BasalSegment segment) {
     // index must be in range
     assert(0 <= index && index < segments.length);
@@ -220,7 +221,13 @@ class BasalPlan {
       );
     }
 
-    removeAt(index);
-    add(segment);
+    // When the plan contains a single segment, calling `removeAt` will
+    // fail with an exception. As such, we handle it here (it is a simple case).
+    if (segments.length == 1) {
+      _segments[index] = segment;
+    } else {
+      removeAt(index);
+      add(segment);
+    }
   }
 }
