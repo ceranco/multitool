@@ -27,11 +27,7 @@ class BasalPlanListView extends StatelessWidget {
                         endTime: entry.value.end,
                         value: entry.value.basalRate,
                         onFinish: (segment) {
-                          try {
-                            plan.replaceAt(entry.key, segment);
-                          } catch (e) {
-                            print(e);
-                          }
+                          plan.replaceAt(entry.key, segment);
                         },
                       ),
                     );

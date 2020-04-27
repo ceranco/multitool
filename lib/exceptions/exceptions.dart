@@ -3,5 +3,5 @@ class InvalidOperationException implements Exception {
   InvalidOperationException(this.cause);
 
   @override
-  String toString() => cause;
+  String toString() => 'InvalidOperationException: $cause';
 }
