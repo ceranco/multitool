@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:flutter/foundation.dart';
 import 'package:multitool/basal_plan_recorder/models/basal_segment.dart';
 import 'package:multitool/basal_plan_recorder/models/basal_time.dart';
 import 'package:multitool/exceptions/exceptions.dart';
@@ -13,7 +14,7 @@ import 'package:multitool/exceptions/exceptions.dart';
 /// * Have at least **one** segment.
 /// * The segment(s) must **continuously** span the whole day [(00:00)..(24:00)]
 /// * The segments must **not** overlap.
-class BasalPlan {
+class BasalPlan extends ChangeNotifier {
   List<BasalSegment> _segments;
 
   /// A read-only view of the plan's basal segments.
@@ -147,6 +148,7 @@ class BasalPlan {
         _segments[index] = segment;
       }
     }
+    notifyListeners();
   }
 
   /// Removes the segment at the given index.
@@ -190,6 +192,8 @@ class BasalPlan {
     // Remove the segment after the changes to ensure that
     // the index remains correct.
     _segments.removeAt(index);
+
+    notifyListeners();
   }
 
   /// Replaces the segment at the given index.
@@ -225,9 +229,13 @@ class BasalPlan {
     // fail with an exception. As such, we handle it here (it is a simple case).
     if (segments.length == 1) {
       _segments[index] = segment;
+
+      notifyListeners();
     } else {
       removeAt(index);
       add(segment);
+
+      // `notifyListeners` isn't needed here as it is called in `removeAt` and `add`.
     }
   }
 }
