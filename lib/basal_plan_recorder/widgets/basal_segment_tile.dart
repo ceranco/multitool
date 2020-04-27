@@ -17,13 +17,26 @@ class BasalSegmentTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final onTap = mode == BasalSegmentTileMode.edit ? onEdit : onRemove;
-    final icon = mode == BasalSegmentTileMode.edit ? Icons.edit : Icons.clear;
-    final backgroundColor =
-        mode == BasalSegmentTileMode.edit ? Colors.blue : Colors.red;
-    final materialColor =
-        onTap != null ? Colors.transparent : Color(0x409E9E9E);
-    final iconColor = onTap != null ? Colors.white : Colors.white30;
+    final onTap = mode.map(
+      whenEdit: onEdit,
+      whenRemove: onRemove,
+    );
+    final icon = mode.map(
+      whenView: Icons.remove_red_eye,
+      whenEdit: Icons.edit,
+      whenRemove: Icons.clear,
+    );
+    final backgroundColor = mode.map(
+      whenView: Colors.blue,
+      whenEdit: Colors.blue,
+      whenRemove: Colors.red,
+    );
+    final materialColor = mode == BasalSegmentTileMode.view
+        ? Colors.transparent
+        : onTap != null ? Colors.transparent : Color(0x409E9E9E);
+    final iconColor = mode == BasalSegmentTileMode.view
+        ? Colors.white
+        : onTap != null ? Colors.white : Colors.white30;
 
     final textStyle = TextStyle(
       fontSize: 24,
@@ -72,4 +85,22 @@ class BasalSegmentTile extends StatelessWidget {
   }
 }
 
-enum BasalSegmentTileMode { edit, remove }
+enum BasalSegmentTileMode {
+  view,
+  edit,
+  remove,
+}
+
+extension _BasalSegmentTileMode on BasalSegmentTileMode {
+  T map<T>({T whenView, T whenEdit, T whenRemove}) {
+    switch (this) {
+      case BasalSegmentTileMode.view:
+        return whenView;
+      case BasalSegmentTileMode.edit:
+        return whenEdit;
+      case BasalSegmentTileMode.remove:
+        return whenRemove;
+    }
+    return null;
+  }
+}
