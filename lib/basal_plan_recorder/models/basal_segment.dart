@@ -21,6 +21,13 @@ class BasalSegment {
     @required this.basalRate,
   }) : assert(start < end);
 
+  BasalSegment.fromJson(Map<String, dynamic> data)
+      : start = BasalTime.fromJson(data['start']),
+        end = BasalTime.fromJson(data['end']),
+        basalRate = data['basalRate'].toDouble() {
+    assert(start < end);
+  }
+
   @override
   operator ==(Object other) =>
       other is BasalSegment &&
@@ -36,6 +43,12 @@ class BasalSegment {
     hash = hash * 31 + basalRate.hashCode;
     return hash;
   }
+
+  Map<String, dynamic> get json => {
+        'start': start.json,
+        'end': end.json,
+        'basalRate': basalRate,
+      };
 
   /// Calculates the relationship of this segment with another one.
   ///

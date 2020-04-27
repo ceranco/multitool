@@ -30,6 +30,17 @@ class BasalPlan {
           ),
         ];
 
+  // TODO: add assert that verifies that the plan is valid.
+  BasalPlan.fromJson(Map<String, dynamic> data)
+      : _segments = [
+          for (var segmentData in data['segments'])
+            BasalSegment.fromJson(segmentData)
+        ];
+
+  Map<String, dynamic> get json => {
+        'segments': [for (var segment in _segments) segment.json]
+      };
+
   /// Adds a new segment to the plan.
   ///
   /// Behaves as follows:

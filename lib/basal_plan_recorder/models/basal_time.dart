@@ -25,6 +25,13 @@ class BasalTime {
       : hour = encodedInt ~/ 60,
         minute = encodedInt % 60;
 
+  BasalTime.fromJson(Map<String, dynamic> data)
+      : hour = data['hour'],
+        minute = data['minute'] {
+    assert(0 <= hour && hour <= 24);
+    assert(0 <= minute && minute < 60);
+  }
+
   /// Returns a human-readable representation of the [BasalTime] in the `HH:MM` format.
   ///
   /// ```dart
@@ -55,6 +62,11 @@ class BasalTime {
     hash = hash * 31 + minute.hashCode;
     return hash;
   }
+
+  Map<String, dynamic> get json => {
+        'hour': hour,
+        'minute': minute,
+      };
 
   /// Returns the time encoded into an [int].
   ///
