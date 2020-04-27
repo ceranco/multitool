@@ -4,14 +4,12 @@ import 'package:multitool/basal_plan_recorder/widgets/basal_segment_tile.dart';
 import 'package:multitool/basal_plan_recorder/widgets/edit_segment_bottom_sheet.dart';
 
 class BasalPlanListView extends StatefulWidget {
+  final BasalPlan plan;
+
   const BasalPlanListView({
     Key key,
     @required this.plan,
-    @required this.mode,
   }) : super(key: key);
-
-  final BasalPlan plan;
-  final BasalSegmentTileMode mode;
 
   @override
   _BasalPlanListViewState createState() => _BasalPlanListViewState();
@@ -26,9 +24,9 @@ class _BasalPlanListViewState extends State<BasalPlanListView> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: BasalSegmentTile(
-              mode: widget.mode,
+              icon: Icons.edit,
               segment: entry.value,
-              onEdit: () {
+              onTapIcon: () {
                 showModalBottomSheet(
                   context: context,
                   builder: (context) => EditSegmentBottomSheet(
@@ -41,7 +39,7 @@ class _BasalPlanListViewState extends State<BasalPlanListView> {
                   ),
                 );
               },
-              onRemove: widget.plan.segments.length > 1
+              onSwipe: widget.plan.segments.length > 1
                   ? () {
                       setState(() {
                         widget.plan.removeAt(entry.key);
