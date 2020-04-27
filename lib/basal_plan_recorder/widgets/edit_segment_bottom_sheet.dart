@@ -50,9 +50,16 @@ class _EditSegmentBottomSheetState extends State<EditSegmentBottomSheet> {
           divisions: divisions,
           max: max,
           onChanged: (value) {
-            setState(() {
-              startTime = BasalTime.decode(value.toInt());
-            });
+            final newTime = BasalTime.decode(value.toInt());
+
+            // We need to make sure that the segments `start` time is earlier than
+            // the `end` time.
+            // Otherwise the segment will be created with an invalid state.
+            if (newTime < endTime) {
+              setState(() {
+                startTime = newTime;
+              });
+            }
           },
         ),
         SliderTile(
@@ -62,9 +69,16 @@ class _EditSegmentBottomSheetState extends State<EditSegmentBottomSheet> {
           divisions: divisions,
           max: max,
           onChanged: (value) {
-            setState(() {
-              endTime = BasalTime.decode(value.toInt());
-            });
+            final newTime = BasalTime.decode(value.toInt());
+
+            // We need to make sure that the segments `end` time is later than
+            // the `start` time.
+            // Otherwise the segment will be created with an invalid state.
+            if (newTime > startTime) {
+              setState(() {
+                endTime = newTime;
+              });
+            }
           },
         ),
         SliderTile(

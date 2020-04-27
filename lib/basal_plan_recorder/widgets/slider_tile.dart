@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+// TODO: Create a custom slider that enables setting a custom 'disabled' segment.
+
 class SliderTile extends StatelessWidget {
   final double sliderValue;
   final String title;
