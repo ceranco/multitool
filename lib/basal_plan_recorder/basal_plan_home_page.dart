@@ -22,13 +22,17 @@ class _BasalPlanHomePageState extends State<BasalPlanHomePage> {
   }
 
   void getPlan() async {
-    final snapshot = await Firestore.instance
-        .collection('basalplans')
-        .document('plan')
-        .get();
+    const collectionName = 'basalplans';
+    const documentName = 'plan';
+    final document =
+        Firestore.instance.collection(collectionName).document(documentName);
+    final snapshot = await document.get();
 
     setState(() {
       plan = BasalPlan.fromJson(snapshot.data);
+    });
+    plan.addListener(() async {
+      await document.setData(plan.json);
     });
   }
 
