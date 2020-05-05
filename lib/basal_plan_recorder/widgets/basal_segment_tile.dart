@@ -27,8 +27,7 @@ class BasalSegmentTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final materialColor =
-        onTapIcon != null ? Colors.transparent : Color(0x409E9E9E);
+    final materialColor = Colors.transparent;
     final iconColor = onTapIcon != null ? Colors.white : Colors.white30;
     final direction = onSwipe != null ? DismissDirection.startToEnd : null;
 
