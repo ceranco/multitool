@@ -17,11 +17,15 @@ import 'package:multitool/exceptions/exceptions.dart';
 class BasalPlan extends ChangeNotifier {
   List<BasalSegment> _segments;
 
+  /// The [DateTime] at which the plan was created.
+  DateTime created;
+
   /// A read-only view of the plan's basal segments.
   UnmodifiableListView<BasalSegment> get segments =>
       UnmodifiableListView(_segments);
 
-  /// Creates a new instance with **one** segment with a default basal rate (1.0).
+  /// Creates a new instance with **one** segment with a
+  /// default basal rate (1.0) and the current time [DateTime.now()].
   BasalPlan()
       : _segments = [
           BasalSegment(
@@ -29,12 +33,15 @@ class BasalPlan extends ChangeNotifier {
             end: BasalTime.latest,
             basalRate: 1.0,
           ),
-        ];
+        ],
+        created = DateTime.now();
 
   /// Creates a new copied instance of the plan.
   ///
   /// This is useful for making comparisons after editing operations.
-  BasalPlan.copy(BasalPlan other) : _segments = List.from(other._segments);
+  BasalPlan.copy(BasalPlan other)
+      : _segments = List.from(other._segments),
+        created = other.created;
 
   // TODO: add assert that verifies that the plan is valid.
   /// Creates a new instance from json data.
@@ -42,19 +49,28 @@ class BasalPlan extends ChangeNotifier {
       : _segments = [
           for (var segmentData in data['segments'])
             BasalSegment.fromJson(segmentData)
-        ];
+        ],
+        created = DateTime.parse(data['created']);
 
   /// Returns the json representation of this instance.
   Map<String, dynamic> get json => {
-        'segments': [for (var segment in _segments) segment.json]
+        'segments': [for (var segment in _segments) segment.json],
+        'created': created.toIso8601String(),
       };
 
   @override
   operator ==(Object other) =>
-      other is BasalPlan && listEquals(other._segments, _segments);
+      other is BasalPlan &&
+      listEquals(other._segments, _segments) &&
+      other.created == created;
 
   @override
-  int get hashCode => _segments.hashCode;
+  int get hashCode {
+    int hash = 23;
+    hash = hash * 31 + _segments.hashCode;
+    hash = hash * 31 + created.hashCode;
+    return hash;
+  }
 
   /// Adds a new segment to the plan.
   ///

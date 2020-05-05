@@ -41,16 +41,10 @@ class _BasalPlanHomePageState extends State<BasalPlanHomePage> {
   @override
   Widget build(BuildContext context) {
     final fabIcon = editing ? Icons.save : Icons.edit;
-    // final fabOnPressed = editing
-    //     ? openAddSegmentModal
-    //     : () {
-    //         setState(() {
-    //           editing = true;
-    //         });
-    //       };
     final fabOnPressed = () {
       // Save the new plan if it changed.
       if (editing && originalPlan != plan) {
+        plan.created = DateTime.now();
         currentPlanDocument.setData(plan.json);
         originalPlan = BasalPlan.copy(plan);
       }
