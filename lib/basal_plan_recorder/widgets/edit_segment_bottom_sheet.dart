@@ -3,6 +3,7 @@ import 'package:multitool/basal_plan_recorder/models/basal_segment.dart';
 import 'package:multitool/basal_plan_recorder/models/basal_time.dart';
 import 'package:multitool/basal_plan_recorder/widgets/slider_tile.dart';
 
+// TODO: Allow pressing the OK button only if the change is valid (no changing the first and last start and end time).
 class EditSegmentBottomSheet extends StatefulWidget {
   final void Function(BasalSegment) onFinish;
   final BasalTime startTime;
