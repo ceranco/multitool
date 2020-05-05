@@ -31,16 +31,30 @@ class BasalPlan extends ChangeNotifier {
           ),
         ];
 
+  /// Creates a new copied instance of the plan.
+  ///
+  /// This is useful for making comparisons after editing operations.
+  BasalPlan.copy(BasalPlan other) : _segments = List.from(other._segments);
+
   // TODO: add assert that verifies that the plan is valid.
+  /// Creates a new instance from json data.
   BasalPlan.fromJson(Map<String, dynamic> data)
       : _segments = [
           for (var segmentData in data['segments'])
             BasalSegment.fromJson(segmentData)
         ];
 
+  /// Returns the json representation of this instance.
   Map<String, dynamic> get json => {
         'segments': [for (var segment in _segments) segment.json]
       };
+
+  @override
+  operator ==(Object other) =>
+      other is BasalPlan && listEquals(other._segments, _segments);
+
+  @override
+  int get hashCode => _segments.hashCode;
 
   /// Adds a new segment to the plan.
   ///
