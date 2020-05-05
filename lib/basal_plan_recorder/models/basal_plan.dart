@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:multitool/basal_plan_recorder/models/basal_segment.dart';
 import 'package:multitool/basal_plan_recorder/models/basal_time.dart';
@@ -50,12 +51,12 @@ class BasalPlan extends ChangeNotifier {
           for (var segmentData in data['segments'])
             BasalSegment.fromJson(segmentData)
         ],
-        created = DateTime.parse(data['created']);
+        created = (data['created'] as Timestamp).toDate();
 
   /// Returns the json representation of this instance.
   Map<String, dynamic> get json => {
         'segments': [for (var segment in _segments) segment.json],
-        'created': created.toIso8601String(),
+        'created': Timestamp.fromDate(created),
       };
 
   @override
