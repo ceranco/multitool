@@ -5,10 +5,17 @@ import 'package:multitool/basal_plan_recorder/widgets/edit_segment_bottom_sheet.
 import 'package:provider/provider.dart';
 
 class BasalPlanListView extends StatelessWidget {
-  const BasalPlanListView({Key key}) : super(key: key);
+  final bool editable;
+
+  const BasalPlanListView({
+    Key key,
+    this.editable = false,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final segmentIcon = editable ? Icons.edit : Icons.no_encryption;
+
     return Consumer<BasalPlan>(
       builder: (BuildContext context, BasalPlan plan, Widget child) {
         return ListView(
@@ -17,22 +24,24 @@ class BasalPlanListView extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: BasalSegmentTile(
-                  icon: Icons.edit,
+                  icon: segmentIcon,
                   segment: entry.value,
-                  onTapIcon: () {
-                    showModalBottomSheet(
-                      context: context,
-                      builder: (context) => EditSegmentBottomSheet(
-                        startTime: entry.value.start,
-                        endTime: entry.value.end,
-                        value: entry.value.basalRate,
-                        onFinish: (segment) {
-                          plan.replaceAt(entry.key, segment);
-                        },
-                      ),
-                    );
-                  },
-                  onSwipe: plan.segments.length > 1
+                  onTapIcon: editable
+                      ? () {
+                          showModalBottomSheet(
+                            context: context,
+                            builder: (context) => EditSegmentBottomSheet(
+                              startTime: entry.value.start,
+                              endTime: entry.value.end,
+                              value: entry.value.basalRate,
+                              onFinish: (segment) {
+                                plan.replaceAt(entry.key, segment);
+                              },
+                            ),
+                          );
+                        }
+                      : null,
+                  onSwipe: editable && plan.segments.length > 1
                       ? () => plan.removeAt(entry.key)
                       : null,
                 ),
