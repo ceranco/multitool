@@ -44,6 +44,13 @@ class _BasalPlanHomePageState extends State<BasalPlanHomePage> {
     final fabOnPressed = () {
       // Save the new plan if it changed.
       if (editing && originalPlan != plan) {
+        // First we want to save the old plan as a new document in the collection.
+        // This is so that we can view it later.
+        Firestore.instance
+            .collection(basalPlansCollectionName)
+            .add(originalPlan.json);
+
+        // Then we update the time the plan was created an set the `current` document.
         plan.created = DateTime.now();
         currentPlanDocument.setData(plan.json);
         originalPlan = BasalPlan.copy(plan);
