@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:multitool/basal_plan_recorder/basal_plan_home_page.dart';
+import 'package:multitool/basal_plan_recorder/pages/basal_plan_home_page.dart';
 
 void main() => runApp(MyApp());
 
