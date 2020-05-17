@@ -23,4 +23,15 @@ class BasalDB {
 
   static Future<void> addPlan(BasalPlan plan) =>
       _basalPlanCollection.add(plan.json);
+
+  static Stream<Iterable<BasalPlan>> plans() {
+    return _basalPlanCollection
+        .orderBy('created', descending: true)
+        .snapshots()
+        .map(
+          (QuerySnapshot snapshot) => snapshot.documents.map(
+            (document) => BasalPlan.fromJson(document.data),
+          ),
+        );
+  }
 }
