@@ -37,6 +37,7 @@ class _BasalPlanHistoryPageState extends State<BasalPlanHistoryPage> {
                           for (int j = i; j < i + 2; j++)
                             j < plans.length
                                 ? Padding(
+                                    key: ValueKey(plans[j].created),
                                     padding: const EdgeInsets.only(
                                       left: padding,
                                       bottom: padding,
