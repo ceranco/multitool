@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:multitool/basal_plan_recorder/models/basal_plan.dart';
 
 const _basalPlansCollectionName = 'basal-plans';
+const _removedBasalPlansCollectionName = 'removed-basal-plans';
 const _currentPlanDocumentName = 'current';
 
 class BasalDB {
@@ -10,6 +11,8 @@ class BasalDB {
   static final _firestore = Firestore.instance;
   static final _basalPlanCollection =
       _firestore.collection(_basalPlansCollectionName);
+  static final _removedBasalPlanCollection =
+      _firestore.collection(_removedBasalPlansCollectionName);
   static final _currentPlanDocument =
       _basalPlanCollection.document(_currentPlanDocumentName);
 
@@ -39,7 +42,12 @@ class BasalDB {
   static Future<void> removePlan(BasalPlan plan) {
     _BasalPlanIdx planIdx = plan as _BasalPlanIdx;
     assert(planIdx != null, '[plan] must be received using [BasalDB.plans].');
-    return planIdx.document.delete();
+
+    // move the plan to the remove plans collection first
+    return _removedBasalPlanCollection
+        .document(planIdx.document.documentID)
+        .setData(plan.json)
+        .then((_) => planIdx.document.delete());
   }
 }
 
