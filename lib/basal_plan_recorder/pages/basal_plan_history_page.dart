@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:multitool/basal_plan_recorder/models/basal_db.dart';
 import 'package:multitool/basal_plan_recorder/models/basal_plan.dart';
 import 'package:multitool/basal_plan_recorder/widgets/basal_plan_overview_tile.dart';
+import 'package:multitool/basal_plan_recorder/widgets/hiding_progress_indicator.dart';
 
 class BasalPlanHistoryPage extends StatefulWidget {
   @override
@@ -22,29 +23,36 @@ class _BasalPlanHistoryPageState extends State<BasalPlanHistoryPage> {
       body: StreamBuilder(
         stream: BasalDB.plans(),
         builder: (context, AsyncSnapshot<Iterable<BasalPlan>> snapshot) {
-          final plans = snapshot.data.skip(1).toList();
-          return ListView(
-            padding: EdgeInsets.only(top: padding),
-            children: [
-              for (int i = 0; i < plans.length; i += 2)
-                Row(
-                  children: <Widget>[
-                    for (int j = i; j < i + 2; j++)
-                      j < plans.length
-                          ? Padding(
-                              padding: const EdgeInsets.only(
-                                left: padding,
-                                bottom: padding,
-                              ),
-                              child: BasalPlanOverviewTile(
-                                size: overviewSize,
-                                plan: plans[j],
-                              ),
-                            )
-                          : SizedBox(),
+          return HidingProgressIndicator(
+            inProgress: !snapshot.hasData,
+            child: Builder(
+              builder: (BuildContext context) {
+                final plans = snapshot.data?.skip(1)?.toList();
+                return ListView(
+                  padding: EdgeInsets.only(top: padding),
+                  children: [
+                    for (int i = 0; i < plans.length; i += 2)
+                      Row(
+                        children: <Widget>[
+                          for (int j = i; j < i + 2; j++)
+                            j < plans.length
+                                ? Padding(
+                                    padding: const EdgeInsets.only(
+                                      left: padding,
+                                      bottom: padding,
+                                    ),
+                                    child: BasalPlanOverviewTile(
+                                      size: overviewSize,
+                                      plan: plans[j],
+                                    ),
+                                  )
+                                : SizedBox(),
+                        ],
+                      )
                   ],
-                )
-            ],
+                );
+              },
+            ),
           );
         },
       ),
