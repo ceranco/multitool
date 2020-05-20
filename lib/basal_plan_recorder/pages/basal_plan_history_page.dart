@@ -22,7 +22,7 @@ class _BasalPlanHistoryPageState extends State<BasalPlanHistoryPage> {
       body: StreamBuilder(
         stream: BasalDB.plans(),
         builder: (context, AsyncSnapshot<Iterable<BasalPlan>> snapshot) {
-          final plans = snapshot.data.toList();
+          final plans = snapshot.data.skip(1).toList();
           return ListView(
             padding: EdgeInsets.only(top: padding),
             children: [
