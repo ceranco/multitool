@@ -30,8 +30,22 @@ class BasalDB {
         .snapshots()
         .map(
           (QuerySnapshot snapshot) => snapshot.documents.map(
-            (document) => BasalPlan.fromJson(document.data),
+            (document) =>
+                _BasalPlanIdx.fromJson(document.data, document.reference),
           ),
         );
   }
+
+  static Future<void> removePlan(BasalPlan plan) {
+    _BasalPlanIdx planIdx = plan as _BasalPlanIdx;
+    assert(planIdx != null, '[plan] must be received using [BasalDB.plans].');
+    return planIdx.document.delete();
+  }
+}
+
+class _BasalPlanIdx extends BasalPlan {
+  final DocumentReference document;
+
+  _BasalPlanIdx.fromJson(Map<String, dynamic> data, this.document)
+      : super.fromJson(data);
 }
