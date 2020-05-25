@@ -2,13 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:multitool/basal_plan_recorder/models/basal_db.dart';
 import 'package:multitool/basal_plan_recorder/models/basal_plan.dart';
 import 'package:multitool/basal_plan_recorder/pages/basal_plan_page.dart';
+import 'package:multitool/basal_plan_recorder/pages/page.dart';
 import 'package:multitool/basal_plan_recorder/widgets/basal_plan_overview_tile.dart';
 import 'package:multitool/basal_plan_recorder/widgets/hiding_progress_indicator.dart';
 import 'package:multitool/basal_plan_recorder/widgets/tile_chosen_bottom_sheet.dart';
 
-class BasalPlanHistoryPage extends StatefulWidget {
+class BasalPlanHistoryPage extends StatefulWidget implements MultiToolPage {
+  static const String _title = 'Basal Plan History';
+
   @override
   _BasalPlanHistoryPageState createState() => _BasalPlanHistoryPageState();
+
+  @override
+  String get title => _title;
 }
 
 class _BasalPlanHistoryPageState extends State<BasalPlanHistoryPage> {
