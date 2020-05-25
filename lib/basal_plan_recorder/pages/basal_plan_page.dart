@@ -19,35 +19,39 @@ class BasalPlanPage extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black,
-                  blurRadius: 2.0,
-                  spreadRadius: 0.0,
-                )
-              ],
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16.0,
-                vertical: 32.0,
-              ).copyWith(bottom: 8.0),
-              child: BasalPlanChart(
-                plan: plan,
-                lineColor: Colors.blue,
-                gridColor: Colors.black26,
-                titleStyle: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black,
+          Expanded(
+            flex: 4,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black,
+                    blurRadius: 2.0,
+                    spreadRadius: 0.0,
+                  )
+                ],
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 32.0,
+                ).copyWith(bottom: 8.0),
+                child: BasalPlanChart(
+                  plan: plan,
+                  lineColor: Colors.blue,
+                  gridColor: Colors.black26,
+                  titleStyle: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
+                  ),
                 ),
               ),
             ),
           ),
           Expanded(
+            flex: 5,
             child: ChangeNotifierProvider<BasalPlan>.value(
               value: plan,
               child: BasalPlanListView(),
