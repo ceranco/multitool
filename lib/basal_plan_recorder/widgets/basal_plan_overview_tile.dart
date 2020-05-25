@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:multitool/basal_plan_recorder/extensions/date_time_extensions.dart';
 import 'package:multitool/basal_plan_recorder/models/basal_plan.dart';
 import 'package:multitool/basal_plan_recorder/widgets/basal_plan_chart.dart';
 
@@ -61,13 +62,4 @@ class BasalPlanOverviewTile extends StatelessWidget {
       ),
     );
   }
-}
-
-extension _DateTimeExtensions on DateTime {
-  String get dmy => '${this.day}/${this.month}/${this.year}';
-
-  String get hms =>
-      '${this.hour.toString().padLeft(2, '0')}:${this.minute.toString().padLeft(2, '0')}:${this.second.toString().padLeft(2, '0')}';
-
-  String get dmyHms => '$dmy $hms';
 }
