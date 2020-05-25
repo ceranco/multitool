@@ -29,63 +29,65 @@ class BasalSegmentTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final materialColor = Colors.transparent;
     final iconColor = onTapIcon != null ? Colors.white : Colors.white30;
-    final direction = onSwipe != null ? DismissDirection.startToEnd : null;
 
-    return NonClippingDismissible(
-      key: ValueKey(segment),
-      direction: direction,
-      background: Container(
-        decoration: _boxDecoration.copyWith(color: Colors.red),
+    final tile = Container(
+      decoration: _boxDecoration.copyWith(color: Colors.blue),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(left: 8),
-              child: Icon(
-                Icons.clear,
-                color: Colors.white,
-                size: 40,
-              ),
+            Text(
+              '${segment.start.format()} - ${segment.end.format()}',
+              textAlign: TextAlign.left,
+              style: _textStyle,
             ),
+            Text(
+              '${segment.basalRate.toStringAsFixed(2)}',
+              style: _textStyle,
+            ),
+            Material(
+              shape: CircleBorder(),
+              color: materialColor,
+              clipBehavior: Clip.antiAlias,
+              child: InkWell(
+                onTap: onTapIcon,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Icon(
+                    icon,
+                    size: 30,
+                    color: iconColor,
+                  ),
+                ),
+              ),
+            )
           ],
         ),
       ),
-      onDismissed: (_) => onSwipe(),
-      child: Container(
-        decoration: _boxDecoration.copyWith(color: Colors.blue),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(
-                '${segment.start.format()} - ${segment.end.format()}',
-                textAlign: TextAlign.left,
-                style: _textStyle,
-              ),
-              Text(
-                '${segment.basalRate.toStringAsFixed(2)}',
-                style: _textStyle,
-              ),
-              Material(
-                shape: CircleBorder(),
-                color: materialColor,
-                clipBehavior: Clip.antiAlias,
-                child: InkWell(
-                  onTap: onTapIcon,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
+    );
+    return onSwipe != null
+        ? NonClippingDismissible(
+            key: ValueKey(segment),
+            direction: DismissDirection.startToEnd,
+            background: Container(
+              decoration: _boxDecoration.copyWith(color: Colors.red),
+              child: Row(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8),
                     child: Icon(
-                      icon,
-                      size: 30,
-                      color: iconColor,
+                      Icons.clear,
+                      color: Colors.white,
+                      size: 40,
                     ),
                   ),
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
+                ],
+              ),
+            ),
+            onDismissed: (_) => onSwipe(),
+            child: tile,
+          )
+        : tile;
   }
 }
