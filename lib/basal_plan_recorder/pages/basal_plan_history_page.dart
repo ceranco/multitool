@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:multitool/basal_plan_recorder/models/basal_db.dart';
 import 'package:multitool/basal_plan_recorder/models/basal_plan.dart';
+import 'package:multitool/basal_plan_recorder/pages/basal_plan_page.dart';
 import 'package:multitool/basal_plan_recorder/widgets/basal_plan_overview_tile.dart';
 import 'package:multitool/basal_plan_recorder/widgets/hiding_progress_indicator.dart';
 import 'package:multitool/basal_plan_recorder/widgets/tile_chosen_bottom_sheet.dart';
@@ -55,6 +56,17 @@ class _BasalPlanHistoryPageState extends State<BasalPlanHistoryPage> {
                                                 BasalDB.removePlan(plans[j]);
                                                 Navigator.pop(context);
                                               },
+                                              onShowSelected: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) {
+                                                      return BasalPlanPage(
+                                                        plan: plans[j],
+                                                      );
+                                                    },
+                                                  ),
+                                                );
                                               },
                                             );
                                           },
