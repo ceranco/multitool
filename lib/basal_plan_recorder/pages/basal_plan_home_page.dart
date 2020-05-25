@@ -74,34 +74,35 @@ class _BasalPlanHomePageState extends State<BasalPlanHomePage> {
           ),
         ),
       ),
-      floatingActionButton: plan != null
-          ? Row(
-              textDirection: TextDirection.rtl,
-              children: <Widget>[
-                FloatingActionButton(
-                  onPressed: fabOnPressed,
-                  child: Icon(
-                    fabIcon,
-                    size: 30,
-                  ),
+      floatingActionButton: Visibility(
+        visible: plan != null,
+        child: Row(
+          textDirection: TextDirection.rtl,
+          children: <Widget>[
+            FloatingActionButton(
+              onPressed: fabOnPressed,
+              child: Icon(
+                fabIcon,
+                size: 30,
+              ),
+            ),
+            SizedBox(
+              width: 16,
+            ),
+            AnimatedOpacity(
+              opacity: editing ? 1.0 : 0.0,
+              duration: Duration(milliseconds: 250),
+              child: FloatingActionButton(
+                onPressed: editing ? openAddSegmentModal : null,
+                child: Icon(
+                  Icons.add,
+                  size: 30,
                 ),
-                SizedBox(
-                  width: 16,
-                ),
-                AnimatedOpacity(
-                  opacity: editing ? 1.0 : 0.0,
-                  duration: Duration(milliseconds: 250),
-                  child: FloatingActionButton(
-                    onPressed: editing ? openAddSegmentModal : null,
-                    child: Icon(
-                      Icons.add,
-                      size: 30,
-                    ),
-                  ),
-                ),
-              ],
-            )
-          : null,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
