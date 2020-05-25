@@ -57,10 +57,7 @@ class _TileFlatButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FlatButton(
       color: color,
-      onPressed: () {
-        onPressed?.call();
-        Navigator.pop(context);
-      },
+      onPressed: onPressed,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Text(

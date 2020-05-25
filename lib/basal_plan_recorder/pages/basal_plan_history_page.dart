@@ -53,6 +53,8 @@ class _BasalPlanHistoryPageState extends State<BasalPlanHistoryPage> {
                                             return TileChosenBottomSheet(
                                               onDeleteSelected: () {
                                                 BasalDB.removePlan(plans[j]);
+                                                Navigator.pop(context);
+                                              },
                                               },
                                             );
                                           },
