@@ -24,72 +24,68 @@ class _BasalPlanHistoryPageState extends State<BasalPlanHistoryPage> {
     const padding = 16.0;
     final overviewSize = (screenWidth - padding * 3) / 2;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Basal Plan History'),
-      ),
-      body: StreamBuilder(
-        stream: BasalDB.plans(),
-        builder: (context, AsyncSnapshot<Iterable<BasalPlan>> snapshot) {
-          return HidingProgressIndicator(
-            inProgress: !snapshot.hasData,
-            child: Builder(
-              builder: (BuildContext context) {
-                final plans = snapshot.data?.skip(1)?.toList();
-                return ListView(
-                  padding: EdgeInsets.only(top: padding),
-                  children: [
-                    for (int i = 0; i < plans.length; i += 2)
-                      Row(
-                        children: <Widget>[
-                          for (int j = i; j < i + 2; j++)
-                            j < plans.length
-                                ? Padding(
-                                    key: ValueKey(plans[j].created),
-                                    padding: const EdgeInsets.only(
-                                      left: padding,
-                                      bottom: padding,
-                                    ),
-                                    child: BasalPlanOverviewTile(
-                                      size: overviewSize,
-                                      plan: plans[j],
-                                      onLongPress: () {
-                                        showModalBottomSheet(
-                                          context: context,
-                                          builder: (context) {
-                                            return TileChosenBottomSheet(
-                                              onDeleteSelected: () {
-                                                BasalDB.removePlan(plans[j]);
-                                                Navigator.pop(context);
-                                              },
-                                              onShowSelected: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) {
-                                                      return BasalPlanPage(
-                                                        plan: plans[j],
-                                                      );
-                                                    },
-                                                  ),
-                                                );
-                                              },
-                                            );
-                                          },
-                                        );
-                                      },
-                                    ),
-                                  )
-                                : SizedBox(),
-                        ],
-                      )
-                  ],
-                );
-              },
-            ),
-          );
-        },
-      ),
+    return StreamBuilder(
+      stream: BasalDB.plans(),
+      builder: (context, AsyncSnapshot<Iterable<BasalPlan>> snapshot) {
+        return HidingProgressIndicator(
+          inProgress: !snapshot.hasData,
+          child: Builder(
+            builder: (BuildContext context) {
+              final plans = snapshot.data?.skip(1)?.toList();
+              return ListView(
+                padding: EdgeInsets.only(top: padding),
+                children: [
+                  for (int i = 0; i < plans.length; i += 2)
+                    Row(
+                      children: <Widget>[
+                        for (int j = i; j < i + 2; j++)
+                          j < plans.length
+                              ? Padding(
+                                  key: ValueKey(plans[j].created),
+                                  padding: const EdgeInsets.only(
+                                    left: padding,
+                                    bottom: padding,
+                                  ),
+                                  child: BasalPlanOverviewTile(
+                                    size: overviewSize,
+                                    plan: plans[j],
+                                    onLongPress: () {
+                                      showModalBottomSheet(
+                                        context: context,
+                                        builder: (context) {
+                                          return TileChosenBottomSheet(
+                                            onDeleteSelected: () {
+                                              BasalDB.removePlan(plans[j]);
+                                              Navigator.pop(context);
+                                            },
+                                            onShowSelected: () {
+                                              Navigator.pop(context);
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) {
+                                                    return BasalPlanPage(
+                                                      plan: plans[j],
+                                                    );
+                                                  },
+                                                ),
+                                              );
+                                            },
+                                          );
+                                        },
+                                      );
+                                    },
+                                  ),
+                                )
+                              : SizedBox(),
+                      ],
+                    )
+                ],
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }

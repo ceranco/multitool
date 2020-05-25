@@ -59,9 +59,6 @@ class _BasalPlanHomePageState extends State<BasalPlanHomePage> {
     };
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Basal Plan'),
-      ),
       body: HidingProgressIndicator(
         inProgress: plan == null,
         child: Padding(
