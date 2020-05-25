@@ -73,6 +73,16 @@ class BasalPlan extends ChangeNotifier {
     return hash;
   }
 
+  /// Returns the total basal units per a single day.
+  double get totalBasal => _segments.fold(0, (total, segment) {
+        final durationTime = BasalTime.decode(
+          segment.end.asEncoded - segment.start.asEncoded,
+        );
+        final duration = durationTime.hour + durationTime.minute / 60;
+
+        return total + duration * segment.basalRate;
+      });
+
   /// Adds a new segment to the plan.
   ///
   /// Behaves as follows:
