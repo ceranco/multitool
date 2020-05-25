@@ -5,8 +5,17 @@ import 'package:multitool/basal_plan_recorder/models/basal_time.dart';
 
 class BasalPlanChart extends StatelessWidget {
   final BasalPlan plan;
+  final Color lineColor;
+  final Color gridColor;
+  final TextStyle titleStyle;
 
-  const BasalPlanChart({@required this.plan, Key key}) : super(key: key);
+  const BasalPlanChart({
+    @required this.plan,
+    this.lineColor = Colors.white,
+    this.gridColor = Colors.white30,
+    this.titleStyle,
+    Key key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +32,7 @@ class BasalPlanChart extends StatelessWidget {
                 ];
               }).toList(),
               colors: [
-                Colors.white,
+                lineColor,
               ])
         ],
         titlesData: FlTitlesData(
@@ -31,11 +40,13 @@ class BasalPlanChart extends StatelessWidget {
             showTitles: true,
             reservedSize: 12,
             getTitles: (value) => value.toString(),
+            textStyle: titleStyle,
           ),
           bottomTitles: SideTitles(
             showTitles: true,
             interval: (maxHorizontalRange / 2.0).toDouble(),
             getTitles: (value) => BasalTime.decode(value.toInt()).format(),
+            textStyle: titleStyle,
           ),
           rightTitles: SideTitles(
             showTitles: true,
@@ -47,7 +58,7 @@ class BasalPlanChart extends StatelessWidget {
         gridData: FlGridData(
           horizontalInterval: 0.5,
           getDrawingHorizontalLine: (value) => FlLine(
-            color: Colors.white30,
+            color: gridColor,
             strokeWidth: 1,
           ),
         ),
