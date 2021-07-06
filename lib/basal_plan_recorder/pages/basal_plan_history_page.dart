@@ -6,6 +6,7 @@ import 'package:multitool/basal_plan_recorder/pages/page.dart';
 import 'package:multitool/basal_plan_recorder/widgets/basal_plan_overview_tile.dart';
 import 'package:multitool/basal_plan_recorder/widgets/hiding_progress_indicator.dart';
 import 'package:multitool/basal_plan_recorder/widgets/tile_chosen_bottom_sheet.dart';
+import 'package:multitool/preferences.dart';
 
 class BasalPlanHistoryPage extends StatefulWidget implements MultiToolPage {
   static const String _title = 'Basal Plan History';
@@ -18,6 +19,22 @@ class BasalPlanHistoryPage extends StatefulWidget implements MultiToolPage {
 }
 
 class _BasalPlanHistoryPageState extends State<BasalPlanHistoryPage> {
+  void preferencesChanged() {
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    Preferences.addListener(preferencesChanged);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    Preferences.removeListener(preferencesChanged);
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;

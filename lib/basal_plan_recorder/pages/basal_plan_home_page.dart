@@ -5,6 +5,7 @@ import 'package:multitool/basal_plan_recorder/pages/page.dart';
 import 'package:multitool/basal_plan_recorder/widgets/basal_plan_list_view.dart';
 import 'package:multitool/basal_plan_recorder/widgets/edit_segment_bottom_sheet.dart';
 import 'package:multitool/basal_plan_recorder/widgets/hiding_progress_indicator.dart';
+import 'package:multitool/preferences.dart';
 import 'package:provider/provider.dart';
 
 class BasalPlanHomePage extends StatefulWidget implements MultiToolPage {
@@ -22,13 +23,29 @@ class _BasalPlanHomePageState extends State<BasalPlanHomePage> {
   BasalPlan originalPlan;
   BasalPlan plan;
 
+  void preferencesChanged() {
+    getPlan();
+  }
+
   @override
   void initState() {
     getPlan();
+    Preferences.addListener(preferencesChanged);
     super.initState();
   }
 
+  @override
+  void dispose() {
+    Preferences.removeListener(preferencesChanged);
+    super.dispose();
+  }
+
   void getPlan() async {
+    setState(() {
+      editing = false;
+      originalPlan = null;
+      plan = null;
+    });
     final currentPlan = await BasalDB.currentPlan();
 
     setState(() {
